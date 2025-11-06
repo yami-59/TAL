@@ -1,0 +1,10 @@
+numpy
+pandas
+scikit-learn
+nltk
+tqdm
+jsonlines
+matplotlib
+
+sentence-transformers
+faiss-cpu
