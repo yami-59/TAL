@@ -1,11 +1,11 @@
-# 🧠 Information Retrieval Project — TF-IDF & BM25
+#  Information Retrieval Project — TF-IDF & BM25
 
 A minimal yet functional IR system for French Wikipedia articles.  
 Works on **Windows, macOS, Linux** — no external dependencies beyond `numpy` and `tqdm`.
 
 ---
 
-## 🚀 Quick Start (for the grader)
+##  Quick Start (for the grader)
 
 ### 1️⃣ (Optional) Create and activate a virtual environment
 ```bash
@@ -48,7 +48,7 @@ python -m src.cli eval --index models/index.pkl --method tfidf --queries data/re
 python -m src.cli eval --index models/index.pkl --method bm25 --queries data/requetes.jsonl -k 10
 ```
 
-🪄 **Windows users:** Do **not** use `\` for line breaks — write commands in **one single line**.
+ **Windows users:** Do **not** use `\` for line breaks — write commands in **one single line**.
 
 ---
 
@@ -74,7 +74,7 @@ python -m src.cli eval --index models/index.pkl --method bm25 --queries data/req
 
 ---
 
-## 📁 Repository Layout
+##  Repository Layout
 
 ```
 .
@@ -98,7 +98,7 @@ python -m src.cli eval --index models/index.pkl --method bm25 --queries data/req
 
 ---
 
-## 🧾 Data & Formats
+##  Data & Formats
 
 ### Documents
 All files in `data/wiki_*.txt` (UTF-8).  
@@ -110,14 +110,14 @@ Each line is a JSON object:
 {"Answer file": "wiki_042186.txt", "Queries": ["course à pied", "trail"]}
 ```
 
-⚙️ The reader in `utils.py` is robust to:
+ The reader in `utils.py` is robust to:
 - BOM characters  
 - trailing commas  
 - malformed lines (it logs the offending line)
 
 ---
 
-## ⚙️ How It Works
+##  How It Works
 
 1. **Preprocessing**
    - Lowercasing  
@@ -143,7 +143,7 @@ Each line is a JSON object:
 
 ---
 
-## 🖥️ CLI Usage Summary
+##  CLI Usage Summary
 
 ```bash
 # Build index
@@ -160,20 +160,20 @@ python -m src.cli eval --index models/index.pkl --method bm25  --queries data/re
 
 ---
 
-## 📊 Reproducing Results (for the report)
+##  Reproducing Results (for the report)
 
 | Model | Hits@10 | MRR@10 | nDCG@10 | MeanRank |
 |--------|---------|--------|----------|-----------|
 | TF-IDF | … | … | … | … |
 | BM25 | … | … | … | … |
 
-🧩 **Interpretation:**  
+ **Interpretation:**  
 TF-IDF uses cosine similarity (bounded in [0,1]);  
 BM25 scores are unbounded — only ranking/metrics are meaningful.
 
 ---
 
-## 🔧 Tuning & Extending (optional)
+##  Tuning & Extending (optional)
 
 - **BM25 parameters:**  
   edit `src/scorer.py` → adjust `k1`, `b`
@@ -186,7 +186,7 @@ BM25 scores are unbounded — only ranking/metrics are meaningful.
 
 ---
 
-## 🩺 Troubleshooting
+##  Troubleshooting
 
 | Problem | Likely Cause | Fix |
 |----------|---------------|-----|
@@ -194,6 +194,3 @@ BM25 scores are unbounded — only ranking/metrics are meaningful.
 | Index reads `0 docs` | wrong path or file extension | ensure `--docs data` and files end with `.txt` |
 | BM25 scores > 1 | expected behavior | BM25 is not cosine; compare **ranks**, not raw scores |
 
----
-
-👨‍🏫 *Project designed for educational use — easy to extend, test, and understand.*
