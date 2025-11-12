@@ -13,9 +13,16 @@ def read_documents(folder: str) -> Dict[str, str]:
 
 _ws = re.compile(r"\W+", flags=re.UNICODE)
 
+def remove_accents(text: str) -> str:  # ← AJOUT n°2 (nouvelle fonction)
+    """Supprime tous les accents (é → e, à → a, etc.)"""
+    text = unicodedata.normalize('NFD', text)
+    text = text.encode('ascii', 'ignore').decode('utf-8')
+    return str(text)
+
 def normalize(text: str) -> str:
     text = text.lower()
     text = text.replace("œ","oe").replace("æ","ae")   # 常见连写
+    text = remove_accents(text) #supprime les accents
     return text
 
 def tokenize(text: str, remove_stop=True, min_len=2) -> List[str]:

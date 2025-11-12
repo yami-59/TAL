@@ -92,3 +92,62 @@ class BM25Scorer:
                 denom = tf + self.k1 * (1 - self.b + self.b * dl / self.avgdl)
                 scores[doc] += idf * (tf * (self.k1 + 1) / denom)
         return scores
+        
+        
+class EnhancedReranker:
+    def __init__(self, index):
+        self.index = index
+        # Pré-calculer les IDF pour accélérer le calcul
+        self.idf_cache = {}
+
+    def _idf(self, term: str) -> float:
+        # Calcul de l'IDF pour un terme donné
+        if term in self.idf_cache:
+            return self.idf_cache[term]
+        df = self.index.df.get(term, 0)
+        if df == 0:
+            return 0.0
+        idf_value = math.log((self.index.N - df + 0.5) / (df + 0.5) + 1)
+        self.idf_cache[term] = idf_value
+        return idf_value
+
+    def score(self, query: str, candidate_docs=None) -> Dict[str, float]:
+        toks = tokenize(query)
+        uniq = set(toks)
+
+        # Si pas de documents candidats, on prend ceux associés aux termes dans la requête
+        if candidate_docs is None:
+            cand = set()
+            for t in uniq:
+                cand |= set(self.index.postings.get(t, {}).keys())
+        else:
+            cand = set(candidate_docs)
+
+        scores = {doc: 0.0 for doc in cand}
+
+        # Calcul des scores pour chaque document basé sur TF-IDF et fréquence
+        for t in uniq:
+            posting = self.index.postings.get(t, {})
+            idf = self._idf(t)
+            for doc in cand:
+                tf = posting.get(doc, 0)
+                if tf > 0:
+                    # Calcul du score avec TF-IDF (poids du terme dans le document)
+                    tf_weight = (1 + math.log(tf)) * idf
+                    scores[doc] += tf_weight
+
+        # Bonus pour les documents contenant tous les mots de la requête
+        query_words = set(query.lower().split())
+        for doc in scores:
+            doc_words = set(doc.lower().split())
+            if query_words.issubset(doc_words):
+                scores[doc] += 5.0  # Bonus élevé pour les documents qui contiennent tous les termes
+
+        # Bonus basé sur la longueur du document (pour éviter que les documents trop longs ne dominent)
+        for doc in scores:
+            doc_len = self.index.doc_len_terms.get(doc, 0)
+            avg_doc_len = sum(self.index.doc_len_terms.values()) / max(1, self.index.N)
+            length_p = 1.0 - 0.2 * (doc_len / avg_doc_len)
+            scores[doc] *= length_p
+
+        return scores
