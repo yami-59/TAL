@@ -1,4 +1,4 @@
-# 法语停用词（简表）
+# French Stop Words (Short List)
 STOPWORDS_FR = {
     "le","la","les","de","des","du","un","une","et","ou","au","aux","en",
     "d","l","à","mais","pour","par","dans","sur","se","ces","ce","cette",

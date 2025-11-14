@@ -1,4 +1,4 @@
-# Top-K 检索（OR 检索 + 打分）
+# Top-K Search (OR Search + Rating)
 from typing import List, Tuple
 from .indexer import InvertedIndex
 from .scorer import TFIDFScorer, BM25Scorer
@@ -15,5 +15,5 @@ class Searcher:
 
     def search(self, query: str, k=10) -> List[Tuple[str,float]]:
         scores = self.scorer.score(query)
-        # 排序并返回 Top-K
+        # Sort and return Top-K
         return sorted(scores.items(), key=lambda x: x[1], reverse=True)[:k]

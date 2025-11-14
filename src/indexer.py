@@ -1,4 +1,4 @@
- # 构建与保存倒排索引
+# Building and saving inverted indexes
 import pickle
 from collections import defaultdict, Counter
 from typing import Dict, List, Tuple

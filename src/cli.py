@@ -1,4 +1,3 @@
-# 统一命令行入口：index/search/eval 统一入口，便于老师“一键测试”
 import argparse, os, json
 from collections import defaultdict
 from tqdm import tqdm
@@ -23,9 +22,9 @@ def cmd_search(args):
         print(f"{score:.4f}\t{doc}")
 
 def cmd_eval(args):
-    # 读取查询
+    # Read query
     qset = read_queries(args.queries)
-    # 将多条 Queries 视为多个独立查询
+    # Treat multiple Queries as multiple independent queries
     gold = {}
     flat_queries = []
     for ans, qlist in qset:
@@ -33,14 +32,14 @@ def cmd_eval(args):
             gold[q] = ans
             flat_queries.append(q)
 
-    # 搜索
+    # search
     idx = InvertedIndex.load(args.index)
     searcher = Searcher(idx, method=args.method)
     results = {}
     for q in tqdm(flat_queries, desc="Searching"):
         results[q] = searcher.search(q, k=args.k)
 
-    # 评估
+    # Evaluate
     metrics = evaluate_run(results, gold, k=args.k)
     print(json.dumps(metrics, indent=2, ensure_ascii=False))
 
