@@ -99,7 +99,6 @@ python -m src.cli eval --index models/index.pkl --method bm25 --queries data/req
 
 ### Documents
 All files in `data/wiki_*.txt` (UTF-8).  
-Only `*.txt` files are indexed.
 
 ### Queries (`data/requetes.jsonl`)
 Each line is a JSON object:
