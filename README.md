@@ -5,9 +5,9 @@ Works on **Windows, Linux** — no external dependencies beyond `numpy` and `tqd
 
 ---
 
-##  Quick Start (for the grader)
+##  Quick Start 
 
-### 1️⃣ (Optional) Create and activate a virtual environment
+### 1️ (Optional) Create and activate a virtual environment
 ```bash
 python -m venv .venv
 # Windows:
@@ -16,7 +16,7 @@ python -m venv .venv
 source .venv/bin/activate
 ```
 
-### 2️⃣ Install dependencies
+### 2️ Install dependencies
 ```bash
 pip install -r requirements.txt
 ```
@@ -25,34 +25,30 @@ If `requirements.txt` is missing:
 pip install numpy tqdm
 ```
 
-### 3️⃣ Prepare data
-Unzip data into `./data/` (final layout shown below).
-
-### 4️⃣ Build the index
+### 4️ Build the index
 ```bash
 python -m src.cli index --docs data --out models/index.pkl
 ```
 
-### 5️⃣ Run a single query demo (TF-IDF)
+### 5️ Run a single query demo (TF-IDF)
 ```bash
 python -m src.cli search --index models/index.pkl --method tfidf --query "course à pied" -k 10
 ```
 
-### 6️⃣ Run batch evaluation (50 queries from requetes.jsonl)
+### 6️ Run batch evaluation (50 queries from requetes.jsonl)
 ```bash
 python -m src.cli eval --index models/index.pkl --method tfidf --queries data/requetes.jsonl -k 10
 ```
 
-### 7️⃣ Compare BM25
+### 7️ Compare BM25
 ```bash
 python -m src.cli eval --index models/index.pkl --method bm25 --queries data/requetes.jsonl -k 10
 ```
 
- **Windows users:** Do **not** use `\` for line breaks — write commands in **one single line**.
 
 ---
 
-## ✅ Expected Behavior
+##  Expected Behavior
 
 - `search` prints top-K results as  
   `score<TAB>doc_id`  
@@ -160,38 +156,3 @@ python -m src.cli eval --index models/index.pkl --method bm25  --queries data/re
 ```
 
 ---
-
-##  Reproducing Results (for the report)
-
-| Model | Hits@10 | MRR@10 | nDCG@10 | MeanRank |
-|--------|---------|--------|----------|-----------|
-| TF-IDF | … | … | … | … |
-| BM25 | … | … | … | … |
-
- **Interpretation:**  
-TF-IDF uses cosine similarity (bounded in [0,1]);  
-BM25 scores are unbounded — only ranking/metrics are meaningful.
-
----
-
-##  Tuning & Extending (optional)
-
-- **BM25 parameters:**  
-  edit `src/scorer.py` → adjust `k1`, `b`
-- **IDF variants:**  
-  try `log(1 + N/df)` or `log(N/(1+df))`
-- **Stopwords:**  
-  edit `src/stopwords_fr.py`
-- **Simple reranking idea:**  
-  use BM25 top-100, then rerank with phrase hits or title weighting
-
----
-
-##  Troubleshooting
-
-| Problem | Likely Cause | Fix |
-|----------|---------------|-----|
-| `JSONDecodeError` on `requetes.jsonl` | malformed line (missing quotes or extra comma) | fix the bad line (shown in log) |
-| Index reads `0 docs` | wrong path or file extension | ensure `--docs data` and files end with `.txt` |
-| BM25 scores > 1 | expected behavior | BM25 is not cosine; compare **ranks**, not raw scores |
-
