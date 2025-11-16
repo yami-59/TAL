@@ -1,4 +1,4 @@
- # TF-IDF / BM25 及余弦相似度
+# TF-IDF / BM25 and cosine similarity
 import math
 from typing import Dict, List
 from collections import Counter
@@ -8,7 +8,7 @@ class TFIDFScorer:
     def __init__(self, index, log_tf=True):
         self.index = index
         self.log_tf = log_tf
-        # 预计算文档 TF-IDF 范数 ||d||
+        # Pre-computed document TF-IDF norm ||d||
         self.doc_norm = self._precompute_doc_norm()
 
     def _idf(self, term: str) -> float:
@@ -31,7 +31,7 @@ class TFIDFScorer:
     def score(self, query: str, candidate_docs: List[str]=None) -> Dict[str,float]:
         q_tokens = tokenize(query)
         tf_q = Counter(q_tokens)
-        # 计算 query 权重与 ||q||
+        # Calculate query weight and ||q||
         wq = {}
         for t, tf in tf_q.items():
             idf = self._idf(t)
@@ -40,7 +40,7 @@ class TFIDFScorer:
             wq[t] = wt
         qnorm = math.sqrt(sum(v*v for v in wq.values())) or 1e-9
 
-        # 候选集合：查询涉及的 posting 并集
+        # Candidate set: The union of postings involved in the query
         if candidate_docs is None:
             cand = set()
             for t in wq.keys():
@@ -55,7 +55,7 @@ class TFIDFScorer:
                 if doc not in scores: continue
                 wtd = ((1 + math.log(tf)) if (self.log_tf and tf>0) else tf) * self._idf(t)
                 scores[doc] += wtq * wtd
-        # 余弦
+        # Cosine
         for doc in list(scores.keys()):
             scores[doc] = scores[doc] / (qnorm * self.doc_norm.get(doc, 1e-9))
         return scores

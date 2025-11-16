@@ -1,5 +1,4 @@
-
-# Top-K 检索（OR 检索 + 打分）
+# Top-K Search (OR Search + Rating)
 from typing import List, Tuple
 from .indexer import InvertedIndex
 from .scorer import TFIDFScorer, BM25Scorer, EnhancedReranker

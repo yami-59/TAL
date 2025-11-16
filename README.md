@@ -94,6 +94,7 @@ python -m src.cli eval --index models/index.pkl --method bm25 --queries data/req
 │   └── cli.py                     # unified CLI: index / search / eval
 ├── README.md
 └── requirements.txt
+└── .gitignore
 ```
 
 ---

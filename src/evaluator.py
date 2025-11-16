@@ -3,11 +3,11 @@ import math
 from typing import List, Tuple, Dict, Optional
 
 def hits_at_k(ranks: List[Optional[int]], k: int) -> float:
-    # 命中=存在且排名<=k
+    # Hit = Existence and Rank <= k
     return sum(1 for r in ranks if r is not None and r <= k) / max(1, len(ranks))
 
 def mrr_at_k(ranks: List[Optional[int]], k: int) -> float:
-    # 只对命中的样本累加 1/r
+   # Only accumulate 1/r for the hit samples
     s = 0.0
     for r in ranks:
         if r is not None and r <= k:
@@ -15,7 +15,7 @@ def mrr_at_k(ranks: List[Optional[int]], k: int) -> float:
     return s / max(1, len(ranks))
 
 def ndcg_at_k(rank: Optional[int], k: int) -> float:
-    # 单一相关（binary relevance）；没命中或>k 记 0
+    # Binary relevance; miss or >k is recorded as 0.
     if rank is None or rank > k:
         return 0.0
     return 1.0 / math.log2(rank + 1)
@@ -27,7 +27,7 @@ def evaluate_run(results: Dict[str, List[Tuple[str, float]]],
 
     for q, ranking in results.items():
         ans = gold[q]
-        # 评测只关心前k名；若前k名都没有答案，就视为未命中(None)
+       # The evaluation only considers the top k results; if none of the top k results are correct, it is considered a miss (None).
         r: Optional[int] = None
         for i, (doc, _) in enumerate(ranking[:k], start=1):
             if doc == ans:
@@ -35,7 +35,7 @@ def evaluate_run(results: Dict[str, List[Tuple[str, float]]],
                 break
         ranks.append(r)
 
-    # 封顶均值：未命中按 k+1 计入均值，避免均值被极大值拉爆
+    # Capped Mean: Misses are counted as k+1 in the mean to avoid the mean being overestimated by extreme values.
     capped = [(r if r is not None else (k + 1)) for r in ranks]
 
     return {

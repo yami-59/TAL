@@ -1,4 +1,4 @@
-# 读写 实现文本清洗 分词 
+# Reading and writing to achieve text cleaning and word segmentation
 import os, json, re, unicodedata
 from typing import Dict, List, Tuple
 from .stopwords_fr import STOPWORDS_FR
@@ -21,7 +21,7 @@ def remove_accents(text: str) -> str:  # ← AJOUT n°2 (nouvelle fonction)
 
 def normalize(text: str) -> str:
     text = text.lower()
-    text = text.replace("œ","oe").replace("æ","ae")   # 常见连写
+    text = text.replace("œ","oe").replace("æ","ae")   # Common Continuous Writing
     text = remove_accents(text) #supprime les accents
     return text
 
@@ -42,17 +42,17 @@ def read_queries(jsonl_path: str):
             s = line.strip()
             if not s:
                 continue
-            # 清理不可见控制字符（保留常规空白）
+            # Clean up invisible control characters (preserve regular whitespace)
             s = "".join(ch for ch in s if (ord(ch) >= 32 or ch in "\t\r\n"))
-            # 去掉行尾在 } 或 ] 前面的多余逗号
+            # Remove extra commas before the } or ] at the end of a line.
             s = re.sub(r",\s*([}\]])\s*$", r"\1", s)
-            # 去掉可能残留的首部 BOM
+            # Remove any remaining initial BOM (Bill of Materials)
             s = s.lstrip("\ufeff")
 
             try:
                 obj = json.loads(s)
             except json.JSONDecodeError as e:
-                # 打印出问题行，便于定位（然后抛出让你能看到具体是哪一行坏了）
+                # Print out the problematic line to help locate it
                 print(f"[read_queries] JSON error at line {i}: {e}\nRAW: {s[:160]}")
                 raise
 
