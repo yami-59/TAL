@@ -1,7 +1,7 @@
 #  Information Retrieval Project — TF-IDF & BM25
 
-A minimal yet functional IR system for French Wikipedia articles.  
-Works on **Windows, macOS, Linux** — no external dependencies beyond `numpy` and `tqdm`.
+A functional IR system for French Wikipedia articles.  
+Works on **Windows, Linux** — no external dependencies beyond `numpy` and `tqdm`.
 
 ---
 
