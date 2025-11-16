@@ -56,7 +56,6 @@ python -m src.cli eval --index models/index.pkl --method bm25 --queries data/req
   ```
   0.25    wiki_042186.txt
   ```
-  (TF-IDF in [0,1]; BM25 scores are unbounded, e.g. `15.26`.)
 
 - `eval` prints JSON with metrics:
   ```json
